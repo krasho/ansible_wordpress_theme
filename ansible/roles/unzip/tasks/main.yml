@@ -1,0 +1,10 @@
+---
+- name: Install Unzip
+  yum:
+    name: unzip
+    state: installed
+
+- name: Install gtar
+  yum:
+    name: tar
+    state: installed

@@ -1,0 +1,32 @@
+---
+- name: Include variables
+  include_vars: 
+    file: settings.yml
+
+- name: Download composer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: "{{ COMPOSER_INSTALLER_PATH }}"
+  tags:
+    - composer
+
+- name: Install composer
+  command: "{{ item }}"
+  with_items:
+    - "php {{ COMPOSER_INSTALLER_PATH }}"
+    - mv composer.phar /usr/local/bin/composer
+  tags:
+    - composer
+
+- name: Remove composer installer
+  file:
+    path: "{{ COMPOSER_INSTALLER_PATH }}"
+    state: absent
+  tags:
+    - composer
+ 
+- name: Print composer version
+  command: /usr/local/bin/composer -v
+  register: version
+
+- debug: msg="{{ version.stdout_lines }}"

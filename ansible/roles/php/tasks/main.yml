@@ -1,0 +1,53 @@
+---
+- name: Install epel-release
+  yum:
+    name: epel-release
+    state: installed
+
+- name: Install remi-release-7.rpm
+  yum:
+    name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    state: installed
+  become: true
+  become_user: root
+  
+- name: Install PHP 7.3
+  yum:
+    name: 
+      - php
+      - php-fpm
+      - php-mbstring
+      - php-mcrypt
+      - php-pdo
+      - php-xml
+      - php-gd    
+      - php-curl
+      - php-bcmath
+      - php-ctype
+      - php-json
+      - php-mysql
+    enablerepo: remi-php73
+    state: installed
+    
+  become: true
+  become_user: root
+
+- name: Backup default php configuration
+  shell: cp /etc/php.ini /etc/php_default.ini
+  become: true
+  become_user: root  
+  tags: [apache]
+
+
+- name: Php.ini Settings - Max Execution Time
+  ini_file: dest=/etc/php.ini
+            section=PHP
+            option=max_execution_time
+            value=3600
+
+
+- name: Php.ini Settings - Memory Limit
+  ini_file: dest=/etc/php.ini
+            section=PHP
+            option=memory_limit            
+            value=512M

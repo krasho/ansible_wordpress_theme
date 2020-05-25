@@ -1,0 +1,24 @@
+---
+#MySQL Settings
+MYSQL_NEW_ROOT_PASSWORD: "Y6@3kERJ@r%9e&5^" 
+MYSQL_DB: "actbold_custom_theme"
+MYSQL_USER: "actbold_usr"
+MYSQL_PASSWORD: "Y6@3kERJ@r%9e&5^"
+DUMP_FILE: "actbold_custom_theme.sql"
+
+#theme Settings 
+THEME_NAME_FOLDER: "custom_theme"
+THEME_NAME: "custom_theme"
+
+#composer settings
+COMPOSER_INSTALLER_PATH: /tmp/installer.php
+
+
+#Apache Settings
+HOST: "http://local.custom.theme"
+
+
+#WP Settings
+ADMIN_EMAIL: "jose@actbold.com"
+ADMIN_PASSWORD: "123456"
+

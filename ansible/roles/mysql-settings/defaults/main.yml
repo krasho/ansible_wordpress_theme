@@ -1,0 +1,6 @@
+---
+#MySQL Settings
+mysql_root_password: "root"
+mysql_db: "actbold"
+mysql_user: "actbold_usr"
+mysql_password: "123456"

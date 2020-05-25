@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  roles:
+    - apache
+    - mysql
+    - php
+    - unzip
+    - composer
+    - wordpress
+    - document-root-settings
+    - actbold-settings

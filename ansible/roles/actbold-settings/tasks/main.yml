@@ -1,0 +1,97 @@
+---
+- name: Include variables
+  include_vars: 
+    file: settings.yml
+
+- name: Add vagrant user to apache group
+  user:
+    name: vagrant
+    groups: apache
+    append: yes
+
+- name: Create the theme directory
+  file:
+    path: /var/www/html/wordpress/wp-content/themes/custom_theme
+    state: directory
+    mode: '0777'
+    owner: vagrant
+    group: vagrant      
+
+
+- name: Creating link to the theme
+  file:
+    src: "/vagrant/{{THEME_NAME_FOLDER}}"
+    dest: "/var/www/html/wordpress/wp-content/themes/custom_theme"    
+    state: link
+    force: true
+    owner: vagrant
+    group: vagrant      
+  become: true
+  become_user: root
+  tags: [Actbold Settings]
+
+- name: Creates database to Actbold
+  mysql_db:
+    name: "{{ MYSQL_DB }}"
+    state: present
+  tags: [mysql]
+
+- name: create user to actbold
+  mysql_user:
+    name: "{{ MYSQL_USER }}"
+    password: "{{ MYSQL_PASSWORD }}"
+    priv: "{{ MYSQL_DB}}.*:ALL" 
+    state: present
+  tags: [mysql]
+
+- name: Copy the dump file to server
+  copy:
+    src: files/{{ DUMP_FILE }}
+    dest: "/tmp/{{ DUMP_FILE }}"
+  
+
+- name: Import file.sql similar to mysql -u <username> -p <password> < hostname.sql
+  mysql_db:
+    state: import
+    name: "{{ MYSQL_DB}}"
+    target: "/tmp/{{ DUMP_FILE }}"
+
+- name: Change the Siteurl and Home URLs
+  shell: >
+    mysql -e "update {{ MYSQL_DB }}.wp_options set option_value='{{ HOST }}' where option_name='siteurl' or option_name='home'; "
+
+- name: Change The theme
+  shell: >
+    mysql -e "update {{ MYSQL_DB }}.wp_options set option_value='{{ THEME_NAME_FOLDER }}' where option_name='template' or option_name='stylesheet'; "
+
+- name: Change The Admin Password
+  shell: >
+    mysql -e "update {{ MYSQL_DB }}.wp_users set user_pass = md5('{{ADMIN_PASSWORD}}') where user_login='admin'; "
+
+
+- name: Set up wp-config
+  template:
+    src: "files/wp-config.php.j2"   
+    dest: "/var/www/html/wordpress/wp-config.php"
+  tags: [ wordpress ]
+
+
+- name: Set Owner
+  file:
+    path: "/var/www/html/wordpress"
+    state: directory
+    recurse: yes
+    owner: "vagrant"
+    group: "apache"
+  become: true
+  become_user: root  
+  tags: [wordpress]
+
+  
+- name:  Set permissions for directories
+  shell: "/usr/bin/find /var/www/html/wordpress/ -type d -exec chmod 755 {} \\;"
+  tags: [wordpress]
+
+- name: Set permissions for files
+  shell: "/usr/bin/find /var/www/html/wordpress/ -type f -exec chmod 640 {} \\;"
+  tags: [ wordpress ]

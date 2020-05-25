@@ -1,0 +1,32 @@
+{
+  "name": "statefarm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "autoprefixer": "^9.4.2",
+    "node-sass": "latest",
+    "onchange": "^5.2.0",
+    "postcss-cli": "latest"
+  },
+  "scripts": {
+    "node-sass": "node-sass --output-style=expanded --source-map=true _import.scss ./../css/main.css",
+    "prefix": "postcss ./../css/main.css --use=autoprefixer --output=./../css/main.css",
+    "build:sass": "npm run node-sass && npm run prefix",
+    "start": "onchange \"**/*.scss\" -- npm run build:sass"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "Repo/Path"
+  },
+  "keywords": [
+    "SASS"
+  ],
+  "author": "Krasho",
+  "license": "ISC",
+  "homepage": "Path",
+  "dependencies": {}
+}

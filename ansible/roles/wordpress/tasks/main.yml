@@ -1,0 +1,20 @@
+---
+- name: Include variables
+  include_vars: 
+    file: settings.yml
+
+- name: Download and Unpack Latest Wordpress
+  unarchive:
+    src: https://wordpress.org/latest.zip
+    #dest: "{{ http_host }}"
+    dest: "/var/www/html"
+    remote_src: yes
+    #creates: "{{ http_host }}/wordpress"
+    creates: "/var/www/html/wordpress"
+  tags: [wordpress]
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
+
